@@ -1,1 +1,107 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/bootstrap.scss';
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab|Proza+Libre');
+@import url('https://use.fontawesome.com/releases/v5.7.1/css/all.css');
+@import 'color-palette.scss';
+
+.bg-color1{
+    background-color: $color1;
+}
+.bg-color2{
+    background-color: $color2;
+}
+.bg-color3{
+    background-color: $color3;
+}
+
+
+.color1{
+    color: $color1;
+}
+.color2{
+    color: $color2;
+}
+.color3{
+    color: $color3;
+}
+
+.white{
+    color: white;
+}
+
+body{
+    font-family: 'Proza Libre', sans-serif;
+    h1,h2,h3,h4,h5{
+        font-family: 'Roboto Slab', serif;
+        font-stretch: expanded;
+    }
+}
+
+
+// Buttons =====================================================================
+
+.btn {
+    border-radius: 1.078em;
+    font-weight: bold;
+
+    &-lg {
+      border-radius: 2.688em;
+    }
+
+    &-sm {
+      border-radius: 0.844em;
+      font-size: 0.688em;
+    }
+
+    color: white;
+    background-color: $color1;
+    &:hover{
+        color: white;
+        background-color: $color2;
+    }
+}
+
+
+
+//Cards================
+
+.card{
+    .btn{
+        font-size: 0.857em;
+    }
+}
+
+//Forms ===========
+
+input.form-control{
+    border: none;
+    border-bottom: solid 1px;
+    border-radius: 0px;
+    &:focus{
+        border-color: $color2;
+        border-width: 2px;
+        box-shadow: none;
+    }
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: $color2;
+    background-color: $color2;
+}
+
+.has-error{
+    .form-control{
+        border-color: #dc3545;
+        border-style: dashed;
+        border-width: 1px;
+        padding-right: 2.25rem;
+        background-repeat: no-repeat;
+        background-position: center right calc(2.25rem / 4);
+        background-size: calc(2.25rem / 2) calc(2.25rem / 2);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc354…%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+    }
+    .invalid-feedback{
+        display: block;
+    }
+}
