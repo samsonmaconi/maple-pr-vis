@@ -1,0 +1,68 @@
+#genderDiv {
+  border-radius: 100%;
+  padding: 25px;
+
+  .h1 {
+    fill: white;
+    font-weight: bold;
+  }
+
+  .male,
+  .female {
+    position: absolute;
+    z-index: 100;
+    font-weight: bold;
+    font-size: 3.2em;
+    background-color: none;
+    .small {
+      font-size: 0.8em;
+    }
+  }
+}
+
+.clear-glass {
+  position: absolute;
+  z-index: 100;
+  width: 408px;
+  height: 408px;
+  top: -4px;
+  left: 11px;
+  opacity: 0.3;
+  cursor: help;
+}
+
+.male {
+  color: #6269f9;
+  bottom: 100px;
+  right: 90px;
+}
+
+.female {
+  color: #fc4c82;
+  top: 125px;
+  left: 95px;
+}
+
+#infoModal_gender {
+  position: absolute;
+  left: -260px;
+  top: 110px;
+  z-index: 100;
+  visibility: hidden;
+  padding: 10px;
+  padding-left: 20px;
+  min-width: 250px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.829);
+  color: white;
+  .small {
+    font-size: 0.8em;
+  }
+}
+
+::ng-deep {
+  #genderDiv .h1 {
+    fill: white;
+    font-weight: bold;
+  }
+}

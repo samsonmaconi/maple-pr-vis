@@ -1,0 +1,25 @@
+<div id="genderDiv">
+  <div class="female">{{ femaleAverage.toFixed(0) + '%' }}</div>
+  <div class="male">{{ maleAverage.toFixed(0) + '%' }}</div>
+  <img class="clear-glass" src="../../assets/images/clear-glass.png" alt="" />
+</div>
+
+<div id="infoModal_gender">
+  <span class="gender">Male</span>
+  <br />
+  <span class="small population"
+    >Population:
+    <span class="population">{{ malePopulation.toLocaleString() }}</span></span
+  >
+  <h3 class="percentage color2">{{ maleAverage.toFixed(3) + '%' }}</h3>
+  <br />
+  <span class="gender">Female</span>
+  <br />
+  <span class="small population"
+    >Population:
+    <span class="population">{{
+      femalePopulation.toLocaleString()
+    }}</span></span
+  >
+  <h3 class="percentage color2">{{ femaleAverage.toFixed(3) + '%' }}</h3>
+</div>
