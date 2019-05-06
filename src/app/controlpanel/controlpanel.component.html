@@ -1,0 +1,66 @@
+<div id="controlPanel">
+  <mat-card>
+    <mat-card-title
+      ><i class="fas fa-clock"></i> Filter Time Periods</mat-card-title
+    >
+    <mat-card-content>
+      <mat-chip-list [multiple]="true" aria-label="Periods">
+        <mat-chip
+          [selectable]="true"
+          (click)="togglePeriod(i)"
+          [selected]="data.selectedPeriods[i] !== ''"
+          *ngFor="let period of data.periods; index as i"
+          #{{period}}
+          >{{ period.replace('-', ' ') }}</mat-chip
+        >
+      </mat-chip-list>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-2">
+    <mat-card-title>
+      <i class="fas fa-location-arrow"></i>
+      Filter Provinces
+    </mat-card-title>
+    <mat-card-content>
+      <mat-chip-list [multiple]="true" aria-label="Periods">
+        <mat-chip
+          [selectable]="true"
+          (click)="toggleProvince(i)"
+          [selected]="data.selectedProvinces[i] !== ''"
+          *ngFor="let province of data.provinces; index as i"
+          #{{period}}
+          >{{ province }}</mat-chip
+        >
+      </mat-chip-list>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-2">
+      <mat-card-title>
+          <i class="fas fa-hands-helping    "></i>
+          Guide
+        </mat-card-title>
+    <mat-card-content>
+      <mat-chip-list class="mat-chip-list-stacked">
+        <mat-chip class="not-selectable" selected>Selected</mat-chip>
+        <mat-chip class="not-selectable"> Not Selected</mat-chip>
+      </mat-chip-list>
+    </mat-card-content>
+    <mat-card-content>
+      Hover over the Provinces Map, Age group labels, Gender distribution chart, and bar chart components for supplementary information.
+    </mat-card-content>
+    <mat-card-footer>
+      <mat-card-content>
+        <div style="color:rgb(255, 174, 0);" class="px-3">
+          * Please note that the figures in the datasets have been suppressed or
+          rounded to prevent the identification of individuals when the datasets
+          are compiled and compared with other publicly available statistics.
+          Values between 0 and 5 are shown as “--“ and all other values are
+          rounded to the nearest multiple of 5. This may result to the sum of
+          the figures not equating to the totals or aggregates indicated.
+        </div>
+      </mat-card-content>
+    </mat-card-footer>
+  </mat-card>
+</div>

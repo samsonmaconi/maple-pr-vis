@@ -1,0 +1,47 @@
+@import '../../color-palette.scss';
+
+::ng-deep {
+  .domain_hidden .domain {
+    stroke: none;
+  }
+
+  .barLabels {
+    fill: $color1;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .g_itemGroup {
+    cursor: help;
+  }
+
+  .h1.chart-title {
+    font-size: 20px;
+    font-weight: bold;
+    fill: rgb(80, 80, 80);
+    // text-decoration: underline
+  }
+}
+
+#infoModal_qoqPopulation {
+  position: absolute;
+  left: 300px;
+  top: 50px;
+  z-index: 100;
+  visibility: hidden;
+  padding: 10px;
+  padding-left: 20px;
+  min-width: 300px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.829);
+  color: white;
+  .small {
+    font-size: 0.9em;
+  }
+
+  .legend {
+    padding: 2px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+}

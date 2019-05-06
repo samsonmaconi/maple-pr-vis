@@ -1,0 +1,12 @@
+
+img.logo {
+  height: 100px;
+  width: 100px;
+}
+a {
+  color: white;
+  text-decoration: none;
+  &:hover{
+    color: rgb(255, 166, 0);
+  }
+}

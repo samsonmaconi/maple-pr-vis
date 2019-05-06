@@ -1,1 +1,1 @@
-<button mat-fab aria-label="toggle menu" matRipple [matRippleColor]="rippleColor" matRippleCentered=true [matRippleRadius]="radius"> <i class="fas fa-bars"></i> </button>
+<button mat-fab aria-label="toggle menu" matRipple [matRippleColor]="rippleColor" (click)='toggleMenu()' matRippleCentered=true [matRippleRadius]="radius"> <i *ngIf="!controlPanelVisible" class="fas fa-bars"></i> <i *ngIf="controlPanelVisible" class="fa fa-times" aria-hidden="true"></i></button>

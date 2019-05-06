@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-canadamap',
@@ -9,14 +10,18 @@ import * as topojson from 'topojson';
 })
 export class CanadamapComponent implements OnInit {
   svg: d3.Selection<SVGSVGElement, {}, HTMLElement, any>;
-  svgHeight = 800;
+  svgHeight = 820;
   svgWidth = 590;
   provincesGroup;
-  mapColours = ['blue', 'white', 'red'];
+  mapColours = ['#001447', 'white', 'red'];
+  colorScale = d3
+    .scaleLinear()
+    .domain([12, 6, 0])
+    .range(this.mapColours);
 
-  constructor() {}
+  constructor(private data: DataService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.svg = d3
       .select('#canadaMap')
       .append('svg')
@@ -63,6 +68,15 @@ export class CanadamapComponent implements OnInit {
         true
       );
 
+      PRLabel.append('rect')
+        .attr('x', -10)
+        .attr('y', -10)
+        .attr('rx', '10')
+        .attr('ry', '10')
+        .attr('width', '500')
+        .attr('height', '20')
+        .style('fill', 'white');
+
       PRLabel.append('circle')
         .attr('cx', 0)
         .attr('cy', 0)
@@ -84,7 +98,7 @@ export class CanadamapComponent implements OnInit {
 
       PRLabel.attr(
         'transform',
-        `translate(${500 + Math.sin((Math.PI / 12) * i) * -70}, ${100 +
+        `translate(${500 + Math.sin((Math.PI / 12) * i) * -70}, ${120 +
           (Math.PI / 12) * i * 80 +
           5 * i})`
       );
@@ -97,11 +111,59 @@ export class CanadamapComponent implements OnInit {
 
   renderOtherLabels() {
     this.svg
+      .append('path')
+      .attr('id', 'curve1')
+      .attr('fill', 'transparent')
+      .attr('d', 'M153,350 C161,220 299,185 425,40')
+      .attr('transform', 'translate(-55, -20)');
+
+    this.svg
+      .append('path')
+      .attr('id', 'curve2')
+      .attr('fill', 'transparent')
+      .attr('d', 'M153,350 C161,220 289,170 410,40')
+      .attr('transform', 'translate(-75, -20)');
+
+    this.svg
       .append('text')
-      .attr('x', '30')
-      .attr('y', '705')
-      .text('INTENDED DESTINATION MAP')
+      .append('textPath')
+      .attr('xlink:href', '#curve1')
+      .text('Immigrants Intended Destination Map')
       .classed('h1', true);
+
+    this.svg
+      .append('text')
+      .append('textPath')
+      .attr('xlink:href', '#curve2')
+      .text('Total PR Immigrant Population: 354,343,232')
+      .classed('h1 totalPopulation', true);
+
+    this.svg
+      .append('text')
+      .attr('x', 510)
+      .attr('y', 125)
+      .attr('text-anchor', 'start')
+      .style('fill', '#505050')
+      .style('font-weight', 'bold')
+      .text('Ranking');
+
+    this.svg
+      .append('text')
+      .text('Data Source: Government of Canada')
+      .style('fill', 'gray')
+      .style('font-size', '12px')
+      .attr('x', 20)
+      .attr('y', 805);
+
+    this.svg
+      .append('text')
+      .text(
+        'https://open.canada.ca/data/en/dataset/f7e5498e-0ad8-4417-85c9-9b8aff9b9eda'
+      )
+      .style('fill', 'gray')
+      .style('font-size', '10px')
+      .attr('x', 20)
+      .attr('y', 815);
   }
 
   renderMapLegend() {
@@ -137,30 +199,42 @@ export class CanadamapComponent implements OnInit {
     legendGroup
       .append('rect')
       .attr('width', '400')
-      .attr('height', '20')
+      .attr('height', '10')
+      .attr('rx', '5')
+      .attr('ry', '5')
+      .attr('stroke', 'black')
+      .attr('stroke-width', '0.5')
       .attr('fill', 'url(#mygrad)')
       .classed('legendRect', true);
 
     legendGroup
       .append('text')
-      .attr('x', -30)
-      .attr('y', 15)
-      .attr('text-anchor', 'start')
+      .attr('x', 0)
+      .attr('y', 25)
+      .attr('text-anchor', 'middle')
       .text('Min')
-      .classed('h4', true);
+      .classed('legendMin', true);
 
     legendGroup
       .append('text')
-      .attr('x', 405)
-      .attr('y', 15)
-      .attr('text-anchor', 'start')
-      .text('Max');
+      .attr('x', 200)
+      .attr('y', 25)
+      .attr('text-anchor', 'middle')
+      .text('Mid')
+      .classed('legendMid', true);
 
-    legendGroup.attr('transform', 'translate(50, 750)');
+    legendGroup
+      .append('text')
+      .attr('x', 400)
+      .attr('y', 25)
+      .attr('text-anchor', 'middle')
+      .text('Max')
+      .classed('legendMax', true);
+
+    legendGroup.attr('transform', 'translate(60, 750)');
   }
 
   renderMap() {
-    console.log('renderMap()');
     // Load JSON Data then call render methods
     d3.json('../../assets/canada.topojson')
       .then(data => {
@@ -169,31 +243,15 @@ export class CanadamapComponent implements OnInit {
       .catch(err => {
         throw err;
       });
-    console.log('renderMap() end');
   }
 
   ready(data) {
-    const self = this;
-
-    const height = self.svgHeight;
-    const width = self.svgWidth;
-    const margin = { top: 40, bottom: 30, left: 50, right: 30 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    const colorScale = d3
-      .scaleLinear()
-      .domain([0, 6, 12])
-      .range(this.mapColours);
-
-    const g = self.svg.append('g').classed('maingroup', true);
-
-    console.log('topojson data:');
-    console.log(data);
+    const g = this.svg.append('g').classed('maingroup', true);
+    const _this = this;
 
     const projection = d3
       .geoMercator()
-      .translate([880, 1000])
+      .translate([870, 1020])
       .scale(350);
 
     const path = d3.geoPath().projection(projection);
@@ -201,67 +259,144 @@ export class CanadamapComponent implements OnInit {
     let provinces: any = topojson.feature(data, data.objects.gpr_000b11a_e);
     provinces = provinces.features;
 
-    console.log(provinces);
-
     this.provincesGroup = g
       .selectAll('.province')
       .data(provinces)
       .enter()
       .append('path')
-      .attr('class', (d: any) => `province ${d.properties.PREABBR}`)
+      .attr('class', (d: any) => `province province${d.properties.PRUID}`)
       .attr('d', path)
-      .attr('fill', (d: any, i) => colorScale(d.properties.PRUID))
+      .attr('fill', (d: any, i) => this.colorScale(d.properties.PRUID - 1))
       .style('transform-origin', '50% 50%')
-      .each(d =>
-        this.updateProvinceLabel(d.properties.PRUID, d.properties.PREABBR)
-      )
-      .on('mouseover', function(d, i) {
-        self.onMouseOver(this, d, i);
+      .each(d => {
+        this.updateProvinceLabel(d.properties.PRUID, d.properties.PREABBR);
+        d.properties.RANK = +d.properties.PRUID;
       })
-      .on('mouseout', function(d, i) {
-        self.onMouseOut(this);
-      })
-      .on('click', function(d, i) {
-        self.onClick(this, d);
+      .on('mouseover', onMouseOver)
+      .on('mouseout', onMouseOut)
+      .on('mousemove', onMouseMove)
+      .on('click', onClick);
+
+    function onMouseOver(d, i) {
+      d3.select('#canadaMap_toolTip').style('visibility', 'visible');
+      d3.select('#canadaMap_toolTip .name').text(d.properties.PRENAME);
+      d3.select('#canadaMap_toolTip .percentage').text(d.properties.PERCENTAGE);
+      d3.select('#canadaMap_toolTip .population').text(d.properties.POPULATION);
+
+      d3.select(this).style('opacity', 0.7);
+    }
+
+    function onClick(d) {
+      d3.select(this)
+        .transition()
+        .ease(d3.easeCubicIn)
+        .duration(100)
+        .style('transform', 'scale(1.1,1.1)')
+        .transition()
+        .ease(d3.easeCubicOut)
+        .delay(100)
+        .duration(50)
+        .style('transform', 'scale(1,1)');
+
+      d3.select(this).classed('clicked', () => {
+        if (d3.select(this).classed('clicked')) {
+          _this.data.selectedProvinces[d.properties.PRUID - 1] = '';
+          return false;
+        } else {
+          _this.data.selectedProvinces[d.properties.PRUID - 1] =
+            d.properties.PRENAME;
+          return true;
+        }
       });
+
+      d3.select(`.province_label_${d.properties.RANK}`).classed(
+        'clicked',
+        d3.select(`.province_label_${d.properties.RANK}`).classed('clicked')
+          ? false
+          : true
+      );
+
+      _this.data.provincesChanged.emit();
+    }
+
+    function onMouseMove(d) {
+      d3.select('#canadaMap_toolTip')
+        .style('top', d3.mouse(this)[1] + 10 + 'px')
+        .style('left', d3.mouse(this)[0] + 10 + 'px');
+    }
+
+    function onMouseOut() {
+      d3.select('#canadaMap_toolTip').style('visibility', 'hidden');
+      d3.select(this).style('opacity', 0.9);
+    }
+
+    this.subscribeToData();
   }
 
-  onMouseOver(sel: any, d, i) {
-    // tooltip.style('visibility', 'visible').text(d.value + ' ' + unit);
-    console.log(d.properties);
-    console.log(d.properties.PREABBR);
-    console.log(d.properties.PRENAME);
-    console.log(i);
+  async subscribeToData() {
+    const myObserver = {
+      next: data => {
+        this.updateMap(
+          data[0],
+          data[1].populationMin,
+          data[1].populationMax,
+          data[1].populationTotal
+        );
+      },
+      error: err => console.error('Observer got an error: ' + err),
+      complete: () => console.log('Observer got a complete notification')
+    };
 
-    d3.select(sel).style('opacity', 0.7);
+    await this.data.dataReady;
+    this.data.totalPopulationData.subscribe(myObserver);
+    this.data.updateCanadaMap.emit();
   }
 
-  onClick(sel: any, d) {
-    d3.select(sel)
+  updateMap(data, minPopulation, maxPopulation, totalPopulation) {
+    this.svg.select('.legendMin').text(minPopulation.toLocaleString());
+    this.svg
+      .select('.legendMid')
+      .text(Math.round((minPopulation + maxPopulation) / 2).toLocaleString());
+    this.svg.select('.legendMax').text(maxPopulation.toLocaleString());
+    this.svg
+      .select('.h1.totalPopulation')
+      .text(
+        'Total PR Immigrant Population: ' + totalPopulation.toLocaleString()
+      );
+
+    const ratedObjects = [...data];
+
+    ratedObjects.sort((a, b) => {
+      return b.population - a.population;
+    });
+
+    this.colorScale.domain([
+      minPopulation,
+      Math.round((minPopulation + maxPopulation) / 2),
+      maxPopulation
+    ]);
+
+    this.provincesGroup
       .transition()
       .ease(d3.easeCubicIn)
-      .duration(100)
-      .style('transform', 'scale(1.1,1.1)')
-      .transition()
-      .ease(d3.easeCubicOut)
-      .delay(100)
-      .duration(50)
-      .style('transform', 'scale(1,1)');
-
-    d3.select(sel).classed(
-      'clicked',
-      d3.select(sel).classed('clicked') ? false : true
-    );
-
-    d3.select(`.province_label_${d.properties.PRUID}`).classed(
-      'clicked',
-      d3.select(`.province_label_${d.properties.PRUID}`).classed('clicked')
-        ? false
-        : true
-    );
-  }
-
-  onMouseOut(sel: any) {
-    d3.select(sel).style('opacity', 0.9);
+      .duration(1000)
+      .attr('fill', (d: any, i) =>
+        this.colorScale(+data[d.properties.PRUID - 1].population)
+      )
+      .each((d, i) => {
+        this.updateProvinceLabel(
+          ratedObjects.indexOf(data[+d.properties.PRUID - 1]) + 1,
+          d.properties.PREABBR
+        );
+        d.properties.RANK =
+          ratedObjects.indexOf(data[+d.properties.PRUID - 1]) + 1;
+        d.properties.PERCENTAGE =
+          (
+            (+data[d.properties.PRUID - 1].population / totalPopulation) *
+            100
+          ).toFixed(3) + '%';
+        d.properties.POPULATION = (+data[d.properties.PRUID - 1]
+          .population).toLocaleString();
+      });
   }
 }

@@ -1,8 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'bootstrap/bootstrap.scss';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/utilities"; // add css utilities
+
+@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab|Proza+Libre');
 @import url('https://use.fontawesome.com/releases/v5.7.1/css/all.css');
 @import 'color-palette.scss';
+
+* {
+  &:active,
+  :focus {
+    outline: none !important;  // 1
+  }
+}
 
 .bg-color1{
     background-color: $color1;
@@ -31,10 +45,12 @@
 
 body{
     font-family: 'Proza Libre', sans-serif;
-    h1,h2,h3,h4,h5{
+    h1,h2,h3,h4,h5,.h1,.h2,.h3,.h4,.h5{
         font-family: 'Roboto Slab', serif;
         font-stretch: expanded;
     }
+    margin: 0px;
+    // background:#f1f1f1;
 }
 
 
