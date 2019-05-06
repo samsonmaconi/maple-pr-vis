@@ -3,6 +3,8 @@ const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const path = require("path");
+const fs = require("fs");
 const SERVER_PORT = 2222;
 
 const byCountryRoute = require("./routes/byCountry.routes");
@@ -16,12 +18,16 @@ const MONGOOSE_OPTIONS = {
 
 mongoose.Promise = Promise;
 mongoose.connect(DB_URI, MONGOOSE_OPTIONS)
-.catch((error) => console.error(error))
-.then(() => console.log("Database Connected"));
+  .catch((error) => console.error(error))
+  .then(() => console.log("Database Connected"));
 
+// create a write stream (in append mode)
+let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+app.use(morgan('combined', { stream: accessLogStream })) // middleware for logging http requests to access.log
 
-app.use(morgan("combined")); // middleware for logging http requests in terminal
 app.use(bodyParser.json());
+
+//allow Cross Origin Resource Sharing
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -29,8 +35,8 @@ app.use((req, res, next) => {
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   if (req.method === 'OPTIONS') {
-      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-      return res.status(200).json({});
+    res.header('Access-Control-Allow-Methods', 'GET'); // accept only GET requests
+    return res.status(200).json({});
   }
   next();
 });
